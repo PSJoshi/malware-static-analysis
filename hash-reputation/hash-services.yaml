@@ -1,0 +1,20 @@
+online-hash-services:
+    virustotal:
+        url: https://www.virustotal.com/vtapi/v2/file/report
+        key: 
+        enable: yes
+    threatexpert:
+        url: http://threatexpert.com/reports.aspx?find=
+        enable: yes
+    shadowserver:
+        url: http://bin-test.shadowserver.org/api?md5=
+        enable: yes
+    shadowserver-whitelist:
+        url: http://innocuous.shadowserver.org/api/?query=
+        enable: yes
+proxy:
+    user: 
+    password: xxxx
+    host: 
+    port: 8080
+    enable: yes
