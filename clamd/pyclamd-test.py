@@ -1,0 +1,34 @@
+#!/usr/bin/env python
+import pyclamd
+import logging
+import sys
+# setup logging
+logging.basicConfig(level=logging.INFO)
+log = logging.getLogger(__name__)
+
+clam_instance = None
+try:
+    clam_instance = pyclamd.ClamdUnixSocket('/var/run/clamd.scan/clamd.sock')
+    clam_instance.ping()
+except Exception,e:
+    logger.error("Error while establishing connection with Clamd daemon")
+    sys.exit(1)
+if clam_instance:
+    r = clam_instance.scan_file('/home/joshi/bootstrap-4.0.0-dist.zip')
+    # if no virus, response is None. Otherwise virus information is returned in response.
+    print r is None
+
+# eicar test
+# create eicar file 
+void = open('/home/joshi/eicar','wb').write(clam_instance.EICAR())
+
+r=clam_instance.scan_file('/home/joshi/eicar')
+#Out[16]: {'/home/joshi/eicar': ('FOUND', 'Eicar-Test-Signature')}
+
+print r['/home/joshi/eicar']
+#('FOUND', 'Eicar-Test-Signature')
+
+print r['/home/joshi/eicar'][0]
+#'FOUND'
+
+	
