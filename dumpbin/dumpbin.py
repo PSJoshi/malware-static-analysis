@@ -1,0 +1,92 @@
+#!/usr/bin/env python
+
+"""
+this script uses dumpbin.exe to extract information about compiler security flags like NX,CFG etc from executable/DLL files. The flag information is quite useful for static analysis of a binary file. 
+Note- This program requires 'Visual C++ tools for python package' and it can be downloaded from https://wiki.python.org/moin/WindowsCompilers
+"""
+
+import subprocess
+import yaml
+import logging
+import os 
+import sys 
+import argparse 
+
+logging.basicConfig(stream = sys.stdout, level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+def subprocess_response(dumpbin_cmd, check_program):
+    stdout = stderr = None
+    try:
+        cmd = dumpbin_cmd + ' /headers ' + check_program
+        #cmd = os.path.join(os.path.sep,dumpbin_cmd,' /headers ', check_program)
+        logger.debug("command passed to subprocess module for execution is %s" %cmd) 
+        process_instance = subprocess.Popen(cmd, shell=True,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = process_instance.communicate()
+        if stderr:
+            logger.info("An error is encountered during execution of command %s - %s" %(dumpbin_cmd,stderr))
+    except Exception as exc:
+        logger.error("Error while executing %s - %s" %(dumpbin_cmd,exc.message),exc_info=True)
+    return stdout, stderr 
+
+def load_config(yaml_file):
+    config = None
+    try:
+        with open(yaml_file,'r') as f:
+            config = yaml.load(f)
+    except Exception as exc:
+        logger.error("Error while loading configuration file %s - %s" %(yaml_file,exc.message), exc_info = True)
+    return config
+
+if __name__ == "__main__":
+    try:
+        parser = argparse.ArgumentParser(description = "This program uses dumpbin program to capture compiler security flags.")
+        parser.add_argument("-c","--config", required=True,help="Configuration file",dest='config')
+        args = parser.parse_args()
+        if args.config:
+            if not os.path.isfile(args.config):
+                logger.error("Configuration file required for dumpbin.exe is not present! Quitting...")
+                sys.exit(1)
+            yaml_config = load_config(args.config)
+            #logger.info("%s" %yaml_config)
+            logger.debug(yaml_config['dumpbin_path'])
+            logger.debug(yaml_config['dumpbin_exe'])
+            logger.debug(yaml_config['check_program'])
+
+            # check if dumpbin.exe path is valid
+            dumpbin_cmd = os.path.join(yaml_config['dumpbin_path'],yaml_config['dumpbin_exe'])
+            if not os.path.isfile(dumpbin_cmd):
+                logger.info("%s could not be found! Please check the path" %dumpbin_cmd)
+                sys.exit(1)
+            # check if program path is valid
+            if not os.path.isfile(yaml_config['check_program']):
+                logger.info("%s could not be found! Please check the path" %yaml_config['check_program'])
+                sys.exit(1)
+            stdout,stderr = subprocess_response(dumpbin_cmd,yaml_config['check_program'])
+
+            security_flags = dict()
+            # initalize compiler security flags
+            security_flags['ASLR'] = 0
+            security_flags['DEP'] = 0
+            security_flags['CFG'] = 0
+
+            if not stderr:
+                logger.info("%s" %stdout)
+                exe_headers = stdout.strip().split('\n')
+                for line in exe_headers:
+                    if "Dynamic base" in line:
+                        logger.info("ASLR bit set")
+                        security_flags['ASLR'] = 1
+                    elif "NX compatible" in line:
+                        logger.info("DEP bit set")
+                        security_flags['DEP'] = 1
+                    elif "Guard" in line:
+                        logger.info("CFG bit set")
+                        security_flags['CFG'] = 1
+            else:
+                logger.info("Error while getting output from 'dumpbin.exe' program")
+
+            logger.info("Security flags: %s" %security_flags)
+
+    except Exception as exc:
+         logger.error("Error while executing dumpbin script - %s" %exc.message,exc_info=True)
