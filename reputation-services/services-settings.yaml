@@ -1,0 +1,35 @@
+general:
+    # NOTSET=0, DEBUG=10, INFO=20, WARNING=30, ERROR=40
+    log_level: 20
+
+online-hash-services:
+    virustotal:
+        url: https://www.virustotal.com/vtapi/v2/file/report
+        key: 
+        enable: yes
+    threatexpert:
+        url: http://threatexpert.com/reports.aspx?find=
+        enable: yes
+    shadowserver:
+        url: http://bin-test.shadowserver.org/api?md5=
+        enable: yes
+    shadowserver-whitelist:
+        url: http://innocuous.shadowserver.org/api/?query=
+        enable: yes
+
+shodan-services:
+    key: 
+    url: https://api.shodan.io
+
+proxy:
+    user: 
+    password: 
+    host: 10.0.0.1
+    port: 8080
+    enable: yes
+    # timeout period in sec - default 60
+    timeout: 60
+    #proxy authentication type - basic, digest
+    proxy_auth_type: digest
+
+
