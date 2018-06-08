@@ -1,0 +1,160 @@
+Static file analysis
+
+Densityscout
+DensityScout tool calculates density(like entropy) of files in file systems path  and detect potential malware on the system. Typically malware authors pack their code with variety of packer tools or adapt obfuscation and encryption techniques to protect their code. Most of the windows files are not encrypted and/or packed and using this tool, it is possible to find out potential malicious files.
+
+This software can be downloaded from - https://www.cert.at/downloads/software/densityscout_en.html
+It is available on Windows as well as Linux platform.
+
+Yara 
+The file will be checked against yara rule to find potential webshells, exploits, anti-virutal machine detection signatures.
+
+Virustotal 
+The file will be checked against Virustotal database to detect possible infection(s).
+
+The file will be checked for address space layout randomization and other compiler flags.
+
+Signature check 
+check if the file is signed or not
+
+Clamd scan
+Check if the file contains virus using clamd scan
+
+PEStudio check
+Check the indicators as reported by PEStudio and check the malicious quotient.
+
+Aim is to build a repository of features that can be used in doing static analysis of file using machine learning.
+
+
+
+# ENCODED DATA
+pat_hex = Pattern_re('Hex blob', r'([A-F0-9][A-F0-9]|[a-f0-9][a-f0-9]){16,}', weight=1)
+pat_b64 = Pattern_re('Base64 blob', r'(?:[A-Za-z0-9+/]{4}){2,}(?:[A-Za-z0-9+/]{2}[AEIMQUYcgkosw048]=|[A-Za-z0-9+/][AQgw]==)', weight=1)
+
+Analyze PE file header and sections (number of sections, entropy of sections/PE file, suspicious section names, suspicious flags in the characteristics of the PE file, etc.)
+Searches for possible domains, e-mail addresses, IP addresses in the strings of the file.
+Checks if domains are blacklisted based on abuse.ch’s Ransomware Domain Blocklist and malwaredomains.com’s blocklist.
+Find suspicious API calls
+Find anti-VM features
+Find anti-debugging features
+Find presence of IP/domains
+Find entropy
+Check file using YARA signatures
+Test digital signature using sysinternal sigcheck
+Check compiler flags using densityscout
+Check file using virustotal
+
+Other interesting repositories:
+https://github.com/secrary/SSMA
+https://github.com/raden/pi-ngaji/blob/master/pi-ngaji.py
+https://github.com/naisofly/Static-Malware-Analysis
+https://github.com/Sp3ctr3/PyTriage
+https://github.com/ShilpeshTrivedi/MAUPS/blob/master/MAUPS.py
+https://github.com/foreni-packages/peframe
+https://github.com/hiddenillusion/AnalyzePE
+
+Sandbox evasion techniques - http://unprotect.tdgt.org/index.php/Sandbox_Evasion
+
+https://github.com/blackfist/malware-ml
+Malware analysis course - https://github.com/RPISEC/Malware
+https://github.com/ClickSecurity/data_hacking/blob/master/pefile_classification/pe_features.py
+
+Some interesting papers and packages:
+-------------------------------------
+oledump.py
+import pefile,peutils
+
+Open source malware static analysis
+
+PEFrame
+Pyew
+mastiff
+
+Find average values for features:
+
+#Symbols
+Major linker version
+Initialize data size
+Major image version
+DLL char
+characterstic in COFF file header
+
+
+Evaluation of automated static analysis tools for malware detection - https://www.researchgate.net/publication/319719981_Evaluation_of_automated_static_analysis_tools_for_malware_detection_in_Portable_Executable_files
+
+Automated static analysis using python - https://www.youtube.com/watch?v=tNxJzx754BI
+
+Static and dynamic analysis using malware hunter - https://github.com/abdesslem/malwareHunter
+
+Python malware analysis library - https://github.com/keithjjones/malgazer
+
+List of tools for Malware analysis - https://andreafortuna.org/cybersecurity/malware-analysis-my-own-list-of-tools-and-resources/
+
+Malware analysis with multiple features - https://www.researchgate.net/publication/224849898_Malware_Analysis_with_Multiple_Features
+File scanning frameworks - https://www.decalage.info/fr/scan_frameworks
+
+Feature selection and improving classification performance for malware detection - 
+https://digitalcommons.kennesaw.edu/cgi/viewcontent.cgi?referer=https://www.google.co.in/&httpsredir=1&filename=0&article=1009&context=cs_etd&type=additional
+
+Malware detection using machine learning algorithms - https://arxiv.org/pdf/1205.3062.pdf
+
+Creating distributed malware analysis toolchain - https://www.ieeelcn.org/lcn42demos/1570387359.pdf
+Investigation of malicious PE files using supervised learning - http://dl.ifip.org/db/conf/im/im2017-ws1-annet/160.pdf
+
+Various tools for malware analysis - https://blog.because-security.com/t/malware-analysis-forensics-analyze-malicious-documents/190
+Malware detection using machine learning approach - https://github.com/prk54/malware-detection-machine-learning-approach
+Machine learning for malware analysis - http://on-demand.gputechconf.com/gtc/2017/presentation/s7739-andrew-davis-machine-learning-for-malware-analysis.pdf
+Automating static analysis using Laika-Boss - https://www.sans.org/reading-room/whitepapers/malicious/automating-static-file-analysis-metadata-collection-laika-boss-38295
+
+ENISA notes on static analysis - https://www.enisa.europa.eu/topics/trainings-for-cybersecurity-specialists/online-training-material/technical-operational
+
+A Learning model to detect maliciousness of PE file - https://www.sciencedirect.com/science/article/pii/S1319157817300149
+
+PE analysis tools - https://blog.malwarebytes.com/threat-analysis/2014/05/five-pe-analysis-tools-worth-looking-at/
+
+Dataset for training static PE malware machine learning model - https://arxiv.org/abs/1804.04637
+
+Presentations:
+https://conference.hitb.org/hitbsecconf2011kul/materials/D1%20SIGINT%20-%20Muhammad%20Najmi%20Ahmad%20Zabidi%20-%20Compiling%20Features%20for%20Malcious%20Binaries.pdf
+https://www.nsc.liu.se/joint-sec-training-media/forensics.pdf
+https://www.blackhat.com/presentations/bh-dc-07/Kendall_McMillan/Presentation/bh-dc-07-Kendall_McMillan.pdf
+https://www.slideshare.net/j0b1n/introduction-to-malware-analysis-42732148
+http://pelp.sourceforge.net/StaticMalwareDetection.pdf
+https://www.first.org/resources/papers/conf2016/FIRST-2016-38.pdf
+
+Paper on static analysis - https://www.blackhat.com/docs/eu-15/materials/eu-15-KA-Automating-Linux-Malware-Analysis-Using-Limon-Sandbox-wp.pdf
+
+Real time classification of malicious executables - http://ro.ecu.edu.au/cgi/viewcontent.cgi?article=1137&context=ism
+
+System call based anomaly detection using python - https://github.com/shayanb/Stide-ADS
+Behaviour based malware detection system for Android - https://github.com/kapilkchaurasia/Behavior-Based-Malware-Detection-System-for-Android
+Automatic analysis of malware behaviour using machine learning - https://github.com/bienkma/DetectionMalwareBehavior
+Repository of live malwares - https://github.com/ytisf/theZoo
+
+Extract file from another file(pe-carve) - https://github.com/MalwareLu/tools/blob/master/pe-carv.py
+pe-check - wrapper around pe module - http://blog.didierstevens.com/2014/11/18/update-pecheck-py-version-0-4-0/
+
+Static malware analysis - https://github.com/devwerks/Static-Malware-Analyses
+
+Java based PE file malware analysis tool - https://github.com/katjahahn/PortEx
+Master thesis on PE file malware static analysis - https://raw.githubusercontent.com/katjahahn/PortEx/master/masterthesis/masterthesis.pdf
+
+Ember white paper from Endgame - https://arxiv.org/pdf/1804.04637.pdf
+
+Linux malware analysis system - https://github.com/Tencent/HaboMalHunter
+
+elf tool analysis examples using pyelftools - https://github.com/eliben/pyelftools/tree/master/examples
+
+Anomaly types to watch for:
+Thread local storage(TLS) callbacks
+Low or high number of sections
+Suspicious section names
+Small section length
+Zero section length
+Zero timestamp
+Timestamp too old(Before 2000)
+Future timestamp
+High file entropy(>7.0)
+Suspicious MS-DOS stub
+Suspicious image base
+Fake entry point

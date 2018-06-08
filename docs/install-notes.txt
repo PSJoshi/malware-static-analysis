@@ -1,0 +1,31 @@
+Determine file's MIME type:
+----------------------------
+
+You can also install python-magic package available as a part of linux distributions.
+sudo apt install python-magic
+
+Source - https://github.com/PSJoshi/python-magic
+sudo pip install python-magic
+
+ssdeep installation
+--------------------
+sudo apt install ssdeep
+sudo apt install python-cffi
+sudo apt install python-all-dev
+sudo apt install libffi-dev python-dev
+sudo apt install libfuzzy-dev
+sudo pip install ssdeep
+
+Instructions on how to install on different platform are available here:
+http://python-ssdeep.readthedocs.io/en/latest/installation.html
+
+sudo pip install pefile
+
+It is better if you compile yara from source rather than using latest yara package in repository. However, if you wish to use existing yara package from ubuntu distribution, then do this:
+
+sudo apt install libssl-dev
+sudo apt install yara
+sudo pip install yara-python
+
+
+
